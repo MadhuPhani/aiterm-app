@@ -75,7 +75,7 @@
 
   <script>
     const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE'; // Replace this
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pubhtml`;
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/1Z42XVsCzMgQ0QMw7fh_pcdUoL0b6-tmcNeTEwP27CL4/pubhtml`;
 
     let terms = [];
     let filteredTerms = [];
