@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Learn AI Terminologies</title>
+  <script src="https://unpkg.com/tabletop@1.6.0/tabletop.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #f2f6fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    .term {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2b2d42;
+    }
+    .description {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #555;
+    }
+    button {
+      margin: 1rem 0.5rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    input[type="text"] {
+      margin-top: 1rem;
+      padding: 0.7rem;
+      font-size: 1rem;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🧠 Learn AI Terms</h2>
+  <input type="text" id="search" placeholder="Search for a term..." oninput="searchTerm()"/>
+
+  <div class="card">
+    <div class="term" id="term">Loading...</div>
+    <div class="description" id="description">Please wait while we fetch data.</div>
+  </div>
+
+  <div>
+    <button onclick="showRandomTerm()">🔀 Random Term</button>
+    <button onclick="resetSearch()">Reset</button>
+  </div>
+
+  <script>
+    const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE'; // Replace this
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pubhtml`;
+
+    let terms = [];
+    let filteredTerms = [];
+
+    function init() {
+      Tabletop.init({
+        key: SHEET_URL,
+        callback: function(data) {
+          terms = data.map(row => ({
+            term: row.Term,
+            description: row.Description
+          }));
+          filteredTerms = [...terms];
+          showRandomTerm();
+        },
+        simpleSheet: true
+      });
+    }
+
+    function showRandomTerm() {
+      if (filteredTerms.length === 0) {
+        document.getElementById("term").textContent = "No results found";
+        document.getElementById("description").textContent = "";
+        return;
+      }
+      const randomIndex = Math.floor(Math.random() * filteredTerms.length);
+      const item = filteredTerms[randomIndex];
+      document.getElementById("term").textContent = item.term;
+      document.getElementById("description").textContent = item.description;
+    }
+
+    function searchTerm() {
+      const query = document.getElementById("search").value.toLowerCase();
+      filteredTerms = terms.filter(t => t.term.toLowerCase().includes(query));
+      showRandomTerm();
+    }
+
+    function resetSearch() {
+      document.getElementById("search").value = '';
+      filteredTerms = [...terms];
+      showRandomTerm();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+
+</body>
+</html>
